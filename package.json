@@ -1,0 +1,20 @@
+{
+  "name": "documate-vitepress-starter",
+  "description": "A template for creating a new VitePress site with Documate",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview",
+    "documate:upload": "documate upload"
+  },
+  "devDependencies": {
+    "vitepress": "^1.0.0-rc.10",
+    "@documate/documate": "^0.2.0"
+  },
+  "dependencies": {
+    "@documate/vue": "^0.2.3"
+  }
+}
