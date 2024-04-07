@@ -12,7 +12,8 @@
   },
   "devDependencies": {
     "vitepress": "^1.0.0-rc.10",
-    "@documate/documate": "^0.2.0"
+    "@documate/documate": "^0.2.0",
+    "markdown-it-textual-uml": "0.17.1"
   },
   "dependencies": {
     "@documate/vue": "^0.2.3"
