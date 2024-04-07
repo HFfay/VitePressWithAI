@@ -1,8 +1,10 @@
 // .vitepress/theme/index.js
 import { h } from 'vue'
 import DefaultTheme from 'vitepress/theme'
-import Documate from '@documate/vue'
-import '@documate/vue/dist/style.css'
+import Documate from './documate/index'
+import './documate/styles/vars.css'
+import './documate/styles/markdown-body.css'
+import './documate/styles/highlight-js.css'
 import './custom.css'
 
 export default {
