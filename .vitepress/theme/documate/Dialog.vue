@@ -79,51 +79,97 @@ async function startChat(question: string) {
 
   questions.value.push({ role: 'user', content: question, id: ++assistantId })
 
+  // try {
+  //   const response = await fetch(props.endpoint, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       question,
+  //     }),
+  //   })
+  //
+  //   loading.value = false
+  //
+  //   async function streamToString(body: any, assistantId: number) {
+  //     const reader = body?.pipeThrough(new TextDecoderStream()).getReader();
+  //     while (reader) {
+  //       let stream = await reader.read()
+  //       if (stream.done) break
+  //       const chunks = stream.value
+  //
+  //       if (chunks) {
+  //         console.log('chunks = ', chunks)
+  //         for (let chunk of chunks) {
+  //           console.log('questions.value = ', questions.value)
+  //           const assistantIndex = questions.value.findIndex(q => q.role === 'assistant' && q.id === assistantId)
+  //
+  //           const content = chunk
+  //           if (!content) continue
+  //
+  //           if (chatContainer.value) {
+  //             chatContainer.value.scrollTop = chatContainer.value.scrollHeight
+  //           }
+  //
+  //           if (assistantIndex === -1) {
+  //             questions.value.push({ role: 'assistant', content, id: assistantId })
+  //           } else {
+  //             questions.value[assistantIndex].content += content
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   streamToString(response.body, assistantId)
+  // } catch (err) {
+  //   console.log(err)
+  // }
+
   try {
-    const response = await fetch(props.endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        question,
-      }),
-    })
+    const eventSource = new EventSource(props.endpoint);
 
-    loading.value = false
+    eventSource.addEventListener('message', async function(event) {
+      const data = JSON.parse(event.data);
 
-    async function streamToString(body: any, assistantId: number) {
-      const reader = body?.pipeThrough(new TextDecoderStream()).getReader();
-      while (reader) {
-        let stream = await reader.read()
-        if (stream.done) break
-        const chunks = stream.value
+      loading.value = false;
+
+      async function handleEventData(data, assistantId) {
+        const chunks = data.chunks;
 
         if (chunks) {
-          console.log('chunks = ', chunks)
+          console.log('chunks = ', chunks);
           for (let chunk of chunks) {
-            console.log('questions.value = ', questions.value)
-            const assistantIndex = questions.value.findIndex(q => q.role === 'assistant' && q.id === assistantId)
+            console.log('questions.value = ', questions.value);
+            const assistantIndex = questions.value.findIndex(
+                q => q.role === 'assistant' && q.id === assistantId
+            );
 
-            const content = chunk
-            if (!content) continue
+            const content = chunk;
+            if (!content) continue;
 
             if (chatContainer.value) {
-              chatContainer.value.scrollTop = chatContainer.value.scrollHeight
+              chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
             }
 
             if (assistantIndex === -1) {
-              questions.value.push({ role: 'assistant', content, id: assistantId })
+              questions.value.push({ role: 'assistant', content, id: assistantId });
             } else {
-              questions.value[assistantIndex].content += content
+              questions.value[assistantIndex].content += content;
             }
           }
         }
       }
-    }
-    streamToString(response.body, assistantId)
+
+      await handleEventData(data, assistantId);
+    });
+
+    eventSource.addEventListener('error', function(event) {
+      console.error('EventSource failed:', event);
+      eventSource.close();
+    });
   } catch (err) {
-    console.log(err)
+    console.error(err);
   }
 }
 

@@ -11,10 +11,14 @@
     "documate:upload": "documate upload"
   },
   "devDependencies": {
-    "vitepress": "^1.0.0-rc.10",
+    "vitepress": "^1.0.1",
     "@documate/documate": "^0.2.0",
     "markdown-it-textual-uml": "0.17.1",
-    "less": "^4.2.0"
+    "less": "^4.2.0",
+    "@headlessui/vue": "^1.7.16",
+    "@tailwindcss/forms": "^0.5.6",
+    "markdown-it": "^13.0.1",
+    "markdown-it-highlightjs": "^4.0.1"
   },
   "dependencies": {
     "@documate/vue": "^0.2.3"
