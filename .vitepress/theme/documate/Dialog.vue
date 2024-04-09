@@ -131,22 +131,23 @@ async function startChat(question: string) {
 
     eventSource.addEventListener('message', async function(event) {
       const data = JSON.parse(event.data);
-
       loading.value = false;
 
       async function handleEventData(data, assistantId) {
-        const chunks = data.chunks;
+        const chunks = data.result;
 
         if (chunks) {
           console.log('chunks = ', chunks);
-          for (let chunk of chunks) {
+
+         // for (let chunk of chunks) {
             console.log('questions.value = ', questions.value);
             const assistantIndex = questions.value.findIndex(
                 q => q.role === 'assistant' && q.id === assistantId
             );
 
-            const content = chunk;
-            if (!content) continue;
+            //const content = chunk;
+            const content = chunks.output.content;
+            if (!content) return;
 
             if (chatContainer.value) {
               chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
@@ -157,7 +158,7 @@ async function startChat(question: string) {
             } else {
               questions.value[assistantIndex].content += content;
             }
-          }
+         // }
         }
       }
 
@@ -165,7 +166,13 @@ async function startChat(question: string) {
     });
 
     eventSource.addEventListener('error', function(event) {
-      console.error('EventSource failed:', event);
+      if (event.readyState === EventSource.CLOSED) {
+        // 处理连接关闭的情况，例如显示错误信息或重新连接
+        console.log('Connection closed.');
+      } else {
+        // 处理其他错误，例如网络问题
+        console.error('EventSource error:', event);
+      }
       eventSource.close();
     });
   } catch (err) {
