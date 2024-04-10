@@ -34,7 +34,8 @@ const isOpen = ref(false)
   :placeholder="props.placeholder"
   :predefinedQuestions="props.predefinedQuestions"
   :open = "isOpen"
-  @close="isOpen = false"></Dialog>
+  @close="isOpen = false">
+</Dialog>
 </template>
 
 <style scoped>

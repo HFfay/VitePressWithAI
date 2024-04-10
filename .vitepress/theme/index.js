@@ -13,8 +13,7 @@ export default {
     'nav-bar-content-before': () => h(
       Documate,
       {
-        // endpoint: 'http://localhost:9999/ai/askStream',
-        endpoint: 'http://localhost:9999/ai/ask2',
+        endpoint: 'http://localhost:9999/ai/askStream'
       },
     )
   })
